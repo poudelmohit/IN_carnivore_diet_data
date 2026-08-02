@@ -5,7 +5,7 @@ import plotly.express as px
 import streamlit as st
 
 
-st.set_page_config(page_title="Indiana Prey Sample Explorer", page_icon="🗺️", layout="wide")
+st.set_page_config(page_title="Indiana Carnivore Diet Data", page_icon="🗺️", layout="wide")
 
 DEFAULT_DATA_FILE = Path(__file__).with_name("indiana_final_prey_result.csv")
 METADATA_COLUMNS = {"sample_id", "latitude", "longitude", "region_id", "region", "donor"}
@@ -32,20 +32,16 @@ def load_data(source) -> pd.DataFrame:
     return df
 
 
-def format_number(value: float) -> str:
-    return str(int(value)) if float(value).is_integer() else f"{value:g}"
-
-
 def make_prey_summary(row: pd.Series, prey_columns: list[str]) -> str:
     detected = [
-        f"{column}: {format_number(row[column])}"
+        column
         for column in prey_columns
         if row[column] > 0
     ]
     return "<br>".join(detected) if detected else "No non-zero prey items"
 
 
-st.title("Indiana Prey Sample Explorer")
+st.title("Indiana Carnivore Diet Data")
 st.caption("Filter samples by donor, region, or prey detection, then hover over map points for the full non-zero prey profile.")
 
 with st.sidebar:
@@ -134,6 +130,7 @@ fig = px.scatter_mapbox(
     lat="latitude",
     lon="longitude",
     color="donor",
+    color_discrete_map={"coyote": "#F28E2B", "bobcat": "#1F77B4"},
     hover_name="sample_id",
     hover_data={
         "region": True,
@@ -175,4 +172,13 @@ st.download_button(
     data=filtered.drop(columns=["non_zero_prey"]).to_csv(index=False).encode("utf-8"),
     file_name="filtered_prey_samples.csv",
     mime="text/csv",
+)
+
+
+st.divider()
+st.header("Acknowledgment")
+st.markdown(
+    "Funding for this project was provided by the "
+    "**Federal Aid in Wildlife Restoration Program (W-134-P-20)** and the "
+    "**Indiana Department of Natural Resources (INDR-20000686-050-SUB76186)**."
 )
