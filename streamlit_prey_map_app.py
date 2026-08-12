@@ -7,7 +7,7 @@ import streamlit as st
 
 st.set_page_config(page_title="Indiana Carnivore Diet Data", page_icon="🗺️", layout="wide")
 
-DEFAULT_DATA_FILE = Path(__file__).with_name("indiana_final_prey_result.csv")
+DEFAULT_DATA_FILE = Path(__file__).with_name("IN_final_prey_result.csv")
 METADATA_COLUMNS = {"sample_id", "latitude", "longitude", "region_id", "region", "donor"}
 
 
